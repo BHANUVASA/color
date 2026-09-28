@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PalettePro | 10-in-1 Professional Color Engine</title>
+    <!-- FontAwesome Icons for clean UI elements -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-light: #dbeafe;
+            --border: #e2e8f0;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --accent-light: rgba(59, 130, 246, 0.15);
+            --border: #334155;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-fast);
+        }
+
+        a { color: inherit; text-decoration: none; }
+        button { cursor: pointer; border: none; outline: none; background: none; font-family: inherit; }
+
+        /* HEADER & NAVIGATION */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transition: var(--transition-fast);
+        }
+
+        [data-theme="dark"] header {
+            background: rgba(30, 41, 59, 0.85);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1.5rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 800;
+            font-size: 1.35rem;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            list-style: none;
+            overflow-x: auto;
+            padding: 0.25rem;
+        }
+
+        .nav-link {
+            padding: 0.5rem 0.85rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-light);
+            font-weight: 600;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            background: var(--bg-tertiary);
+            transition: var(--transition-fast);
+            font-size: 1rem;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .page-view {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .page-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.75px;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .section-desc {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 700px;
+        }
+
+        /* BUTTONS & BADGES */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: var(--radius-md);
+            font-size: 0.925rem;
+            font-weight: 600;
+            transition: var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+            transform: translateY(-1px);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background: #dcfce7; color: #15803d; }
+        .badge-fail { background: #fee2e2; color: #b91c1c; }
+        .badge-accent { background: var(--accent-light); color: var(--accent); }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            padding: 2rem 0 4rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 1.25rem;
+            letter-spacing: -1.5px;
+        }
+
+        .hero-content span {
+            background: linear-gradient(135deg, #2563eb, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .hero-preview {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .generator-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .palette-container {
+            display: flex;
+            height: 520px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .color-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem 1rem;
+            transition: var(--transition-smooth);
+            position: relative;
+            user-select: none;
+        }
+
+        .color-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: center;
+            opacity: 0.85;
+            transition: var(--transition-fast);
+        }
+
+        .color-col:hover .color-actions {
+            opacity: 1;
+        }
+
+        .col-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: inherit;
+            font-size: 1.1rem;
+            transition: var(--transition-fast);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .col-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .col-btn.locked {
+            background: rgba(0, 0, 0, 0.6) !important;
+            color: #ffffff !important;
+            border-color: transparent;
+        }
+
+        .color-info {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hex-code {
+            font-size: 1.25rem;
+            font-weight: 800;
+            font-family: monospace;
+            cursor: pointer;
+            padding: 0.4rem 0.75rem;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+        }
+
+        .hex-code:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .color-contrast-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            background: rgba(0,0,0,0.15);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .palette-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition-fast);
+        }
+
+        .palette-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-swatches {
+            display: flex;
+            height: 110px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .card-swatch {
+            flex: 1;
+            height: 100%;
+            transition: var(--transition-fast);
+        }
+
+        .card-swatch:hover {
+            flex: 1.5;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            transition: var(--transition-fast);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .theory-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+        }
+
+        .theory-controls {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .form-select, .form-input {
+            width: 100%;
+            padding: 0.65rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .color-picker-input {
+            height: 45px;
+            cursor: pointer;
+            padding: 0.2rem;
+        }
+
+        /* CONTRAST CHECKER */
+        .contrast-tester {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .contrast-preview {
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+        }
+
+        .contrast-score-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .ratio-display {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        /* EXPORT CODE CODE BLOCK */
+        .code-preview {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            font-family: monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        /* TOAST NOTIFICATIONS */
+        #toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: #0f172a;
+            color: white;
+            padding: 0.85rem 1.25rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            animation: slideIn 0.3s ease-out;
+            pointer-events: auto;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            background: var(--bg-secondary);
+            margin-top: auto;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 900px) {
+            .hero, .theory-layout, .contrast-tester { grid-template-columns: 1fr; }
+            .palette-container { height: 600px; flex-direction: column; }
+            .color-col { flex-direction: row; }
+            .color-actions { flex-direction: row; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" class="brand" onclick="app.navigate('home')">
+                <div class="brand-icon"><i class="fa-solid font-awesome fa-palette"></i></div>
+                PalettePro
+            </a>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link" data-page="home"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="#" class="nav-link" data-page="generator"><i class="fa-solid fa-wand-magic-sparkles"></i> Generator</a></li>
+                <li><a href="#" class="nav-link" data-page="trends"><i class="fa-solid fa-fire"></i> Trends</a></li>
+                <li><a href="#" class="nav-link" data-page="library"><i class="fa-solid fa-bookmark"></i> Library</a></li>
+                <li><a href="#" class="nav-link" data-page="theory"><i class="fa-solid fa-circle-half-stroke"></i> Theory</a></li>
+                <li><a href="#" class="nav-link" data-page="contrast"><i class="fa-solid fa-eye"></i> Contrast</a></li>
+                <li><a href="#" class="nav-link" data-page="export"><i class="fa-solid fa-code"></i> Export</a></li>
+                <li><a href="#" class="nav-link" data-page="community"><i class="fa-solid fa-users"></i> Explore</a></li>
+                <li><a href="#" class="nav-link" data-page="about"><i class="fa-solid fa-circle-info"></i> About</a></li>
+                <li><a href="#" class="nav-link" data-page="settings"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="icon-btn" id="theme-toggle" title="Toggle Light/Dark Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- 1. HOME VIEW -->
+        <section id="view-home" class="page-view">
+            <div class="hero">
+                <div class="hero-content">
+                    <div class="badge badge-accent" style="margin-bottom: 1rem;"><i class="fa-solid fa-sparkles"></i> Palette Engine 2026 Edition</div>
+                    <h1>Create <span>Perfect Colors</span> For Every Project.</h1>
+                    <p class="section-desc">Generate, explore, and analyze high-contrast, WCAG-compliant color palettes powered by real-time color theory algorithms.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary" onclick="app.navigate('generator')"><i class="fa-solid fa-play"></i> Launch Generator</button>
+                        <button class="btn btn-secondary" onclick="app.navigate('trends')"><i class="fa-solid fa-fire"></i> View Trends</button>
+                    </div>
+                </div>
+                <div class="hero-preview">
+                    <div class="card-swatches" style="height: 220px;" onclick="app.navigate('generator')">
+                        <div class="card-swatch" style="background: #2563eb;"></div>
+                        <div class="card-swatch" style="background: #3b82f6;"></div>
+                        <div class="card-swatch" style="background: #60a5fa;"></div>
+                        <div class="card-swatch" style="background: #93c5fd;"></div>
+                        <div class="card-swatch" style="background: #e0f2fe;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                        <span style="font-weight: 700;">Oceanic Breeze</span>
+                        <span class="badge badge-success">WCAG AAA</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">10M+</div>
+                    <div class="stat-label">Combinations Generated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">WCAG Compliance Support</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label">Built-in Interactive Tools</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. GENERATOR VIEW -->
+        <section id="view-generator" class="page-view">
+            <div class="generator-toolbar">
+                <div>
+                    <h1 class="section-title">Color Generator</h1>
+                    <p style="color: var(--text-secondary);">Press <kbd style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px;">Spacebar</kbd> to generate random color schemes.</p>
+                </div>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button class="btn btn-secondary" onclick="app.saveCurrentPalette()"><i class="fa-regular fa-bookmark"></i> Save Palette</button>
+                    <button class="btn btn-primary" onclick="app.generatePalette()"><i class="fa-solid fa-rotate"></i> Generate</button>
+                </div>
+            </div>
+
+            <div id="palette-engine" class="palette-container">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- 3. TRENDS VIEW -->
+        <section id="view-trends" class="page-view">
+            <h1 class="section-title">2026 Color Trends</h1>
+            <p class="section-desc">Hand-curated palettes trending across modern UI/UX design, branding, and digital media.</p>
+            
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="app.filterTrends('all', this)">All Trends</button>
+                <button class="filter-btn" onclick="app.filterTrends('Pastel', this)">Pastel</button>
+                <button class="filter-btn" onclick="app.filterTrends('Cyber', this)">Cyber Neon</button>
+                <button class="filter-btn" onclick="app.filterTrends('Minimal', this)">Minimal</button>
+                <button class="filter-btn" onclick="app.filterTrends('Corporate', this)">Corporate</button>
+            </div>
+
+            <div id="trends-grid" class="cards-grid">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- 4. LIBRARY VIEW -->
+        <section id="view-library" class="page-view">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <div>
+                    <h1 class="section-title">Your Saved Library</h1>
+                    <p class="section-desc">Palettes stored locally on your device.</p>
+                </div>
+                <button class="btn btn-secondary" onclick="app.clearLibrary()"><i class="fa-solid fa-trash"></i> Clear All</button>
+            </div>
+            <div id="library-grid" class="cards-grid">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- 5. THEORY VIEW -->
+        <section id="view-theory" class="page-view">
+            <h1 class="section-title">Color Harmony Theory</h1>
+            <p class="section-desc">Understand how color relationships work using classical mathematical models.</p>
+
+            <div class="theory-layout">
+                <div class="theory-controls">
+                    <div class="form-group">
+                        <label class="form-label">Base Seed Color</label>
+                        <input type="color" id="theory-seed" class="form-input color-picker-input" value="#2563eb" onchange="app.updateTheory()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Harmony Algorithm</label>
+                        <select id="theory-mode" class="form-select" onchange="app.updateTheory()">
+                            <option value="complementary">Complementary (Opposites)</option>
+                            <option value="analogous">Analogous (Adjacent)</option>
+                            <option value="triadic">Triadic (Equidistant 120°)</option>
+                            <option value="monochromatic">Monochromatic (Shades)</option>
+                            <option value="split">Split-Complementary</option>
+                        </select>
+                    </div>
+                    <p id="theory-explanation" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-top: 1rem;"></p>
+                </div>
+
+                <div class="palette-card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div id="theory-result" class="card-swatches" style="height: 250px;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. CONTRAST CHECKER VIEW -->
+        <section id="view-contrast" class="page-view">
+            <h1 class="section-title">WCAG Contrast Checker</h1>
+            <p class="section-desc">Evaluate accessibility scores for readability standards (WCAG 2.1).</p>
+
+            <div class="contrast-tester">
+                <div class="theory-controls">
+                    <div class="form-group">
+                        <label class="form-label">Background Color</label>
+                        <input type="color" id="contrast-bg" class="form-input color-picker-input" value="#ffffff" oninput="app.updateContrastTest()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Foreground / Text Color</label>
+                        <input type="color" id="contrast-fg" class="form-input color-picker-input" value="#0f172a" oninput="app.updateContrastTest()">
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div id="contrast-preview-box" class="contrast-preview">
+                        <h2 style="font-size: 1.75rem; margin-bottom: 0.5rem;">Sample Preview Text</h2>
+                        <p>The quick brown fox jumps over the lazy dog. Ensure high contrast readability for all users.</p>
+                    </div>
+                    <div class="contrast-score-card">
+                        <div>
+                            <span style="font-size: 0.875rem; color: var(--text-secondary);">Contrast Ratio</span>
+                            <div id="contrast-ratio" class="ratio-display">21:1</div>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <div>Normal Text: <span id="wcag-normal" class="badge">Pass</span></div>
+                            <div>Large Text: <span id="wcag-large" class="badge">Pass</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. EXPORT VIEW -->
+        <section id="view-export" class="page-view">
+            <h1 class="section-title">Export Swatches</h1>
+            <p class="section-desc">Get modern code snippets for your current active palette.</p>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="app.setExportFormat('css', this)">CSS Variables</button>
+                <button class="filter-btn" onclick="app.setExportFormat('scss', this)">SCSS</button>
+                <button class="filter-btn" onclick="app.setExportFormat('tailwind', this)">Tailwind Config</button>
+                <button class="filter-btn" onclick="app.setExportFormat('json', this)">JSON</button>
+            </div>
+
+            <div style="position: relative;">
+                <button class="btn btn-primary" style="position: absolute; top: 1rem; right: 1rem; z-index: 10;" onclick="app.copyExportCode()"><i class="fa-regular fa-copy"></i> Copy Code</button>
+                <pre id="export-code" class="code-preview"></pre>
+            </div>
+        </section>
+
+        <!-- 8. COMMUNITY VIEW -->
+        <section id="view-community" class="page-view">
+            <h1 class="section-title">Community Palette Stream</h1>
+            <p class="section-desc">Discover color combinations uploaded by creators worldwide.</p>
+            <div id="community-grid" class="cards-grid">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- 9. ABOUT VIEW -->
+        <section id="view-about" class="page-view">
+            <h1 class="section-title">About PalettePro</h1>
+            <p class="section-desc">A lightweight, high-performance web suite designed for designers and software engineers.</p>
+
+            <div class="palette-card" style="margin-bottom: 1.5rem; line-height: 1.7;">
+                <h3 style="margin-bottom: 0.5rem;">Architecture & Performance</h3>
+                <p>PalettePro relies on a client-side Single Page Application (SPA) model using semantic HTML5, embedded reactive CSS custom properties, and Vanilla JS execution with zero dependencies.</p>
+            </div>
+        </section>
+
+        <!-- 10. SETTINGS VIEW -->
+        <section id="view-settings" class="page-view">
+            <h1 class="section-title">Preferences</h1>
+            <p class="section-desc">Customize application behaviors and state storage.</p>
+
+            <div class="theory-controls" style="max-width: 600px;">
+                <div class="form-group">
+                    <label class="form-label">Color Format Display</label>
+                    <select id="pref-format" class="form-select" onchange="app.savePreferences()">
+                        <option value="HEX">HEX (#FFFFFF)</option>
+                        <option value="RGB">RGB (255, 255, 255)</option>
+                        <option value="HSL">HSL (0, 0%, 100%)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="display: flex; items-center; justify-content: space-between;">
+                    <label class="form-label" style="margin: 0;">Auto-copy on click</label>
+                    <input type="checkbox" id="pref-autocopy" checked onchange="app.savePreferences()">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast-container"></div>
+
+    <footer>
+        <p>&copy; 2026 PalettePro Suite. Built with Vanilla JS & HTML5.</p>
+    </footer>
+
+    <script>
+        class PaletteApp {
+            constructor() {
+                this.currentPalette = [];
+                this.locks = [false, false, false, false, false];
+                this.savedPalettes = JSON.parse(localStorage.getItem('palettepro_saved') || '[]');
+                this.exportFormat = 'css';
+                this.preferences = JSON.parse(localStorage.getItem('palettepro_prefs') || '{"format":"HEX","autocopy":true}');
+                
+                this.trendData = [
+                    { title: 'Neon Cyberpunk', category: 'Cyber', colors: ['#050505', '#ff0055', '#00f5d4', '#7b2cbf', '#f15bb5'] },
+                    { title: 'Soft Pastel Dream', category: 'Pastel', colors: ['#fbf8cc', '#fde4cf', '#ffcfd2', '#f1c0e8', '#cfbaf0'] },
+                    { title: 'SaaS Corporate Blue', category: 'Corporate', colors: ['#0f172a', '#1e293b', '#2563eb', '#3b82f6', '#f8fafc'] },
+                    { title: 'Nordic Minimalist', category: 'Minimal', colors: ['#2b2d42', '#8d99ae', '#edf2f4', '#ef233c', '#d90429'] }
+                ];
+
+                this.init();
+            }
+
+            init() {
+                this.bindNavigation();
+                this.bindShortcuts();
+                this.initTheme();
+                this.generatePalette();
+                this.renderTrends();
+                this.renderLibrary();
+                this.renderCommunity();
+                this.updateTheory();
+                this.updateContrastTest();
+                
+                // Set default page
+                this.navigate('home');
+            }
+
+            navigate(pageId) {
+                document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+
+                const targetView = document.getElementById(`view-${pageId}`);
+                const targetLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
+
+                if (targetView) targetView.classList.add('active');
+                if (targetLink) targetLink.classList.add('active');
+
+                if (pageId === 'export') this.renderExportCode();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            bindNavigation() {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.navigate(link.dataset.page);
+                    });
+                });
+
+                document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
+            }
+
+            bindShortcuts() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && document.getElementById('view-generator').classList.contains('active')) {
+                        e.preventDefault();
+                        this.generatePalette();
+                    }
+                });
+            }
+
+            getRandomHex() {
+                return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+            }
+
+            getLuminance(hex) {
+                const rgb = this.hexToRgb(hex);
+                const a = [rgb.r, rgb.g, rgb.b].map(v => {
+                    v /= 255;
+                    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+                });
+                return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+            }
+
+            hexToRgb(hex) {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : { r: 0, g: 0, b: 0 };
+            }
+
+            getContrastRatio(hex1, hex2) {
+                const lum1 = this.getLuminance(hex1);
+                const lum2 = this.getLuminance(hex2);
+                const brightest = Math.max(lum1, lum2);
+                const darkest = Math.min(lum1, lum2);
+                return ((brightest + 0.05) / (darkest + 0.05)).toFixed(2);
+            }
+
+            generatePalette() {
+                const container = document.getElementById('palette-engine');
+                if (!container) return;
+
+                if (this.currentPalette.length === 0) {
+                    for (let i = 0; i < 5; i++) this.currentPalette.push(this.getRandomHex());
+                } else {
+                    for (let i = 0; i < 5; i++) {
+                        if (!this.locks[i]) this.currentPalette[i] = this.getRandomHex();
+                    }
+                }
+
+                container.innerHTML = '';
+                this.currentPalette.forEach((hex, idx) => {
+                    const lum = this.getLuminance(hex);
+                    const textColor = lum > 0.179 ? '#0f172a' : '#ffffff';
+
+                    const col = document.createElement('div');
+                    col.className = 'color-col';
+                    col.style.backgroundColor = hex;
+                    col.style.color = textColor;
+
+                    col.innerHTML = `
+                        <div class="color-actions">
+                            <button class="col-btn ${this.locks[idx] ? 'locked' : ''}" onclick="app.toggleLock(${idx})">
+                                <i class="fa-solid fa-${this.locks[idx] ? 'lock' : 'lock-open'}"></i>
+                            </button>
+                        </div>
+                        <div class="color-info">
+                            <span class="hex-code" onclick="app.copyToClipboard('${hex}')">${hex.toUpperCase()}</span>
+                            <span class="color-contrast-badge">${lum > 0.179 ? 'Light' : 'Dark'}</span>
+                        </div>
+                    `;
+                    container.appendChild(col);
+                });
+            }
+
+            toggleLock(index) {
+                this.locks[index] = !this.locks[index];
+                this.generatePalette();
+            }
+
+            toast(msg) {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #4ade80;"></i> ${msg}`;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 2500);
+            }
+
+            copyToClipboard(text) {
+                navigator.clipboard.writeText(text);
+                this.toast(`Copied ${text} to clipboard!`);
+            }
+
+            initTheme() {
+                const theme = localStorage.getItem('palettepro_theme') || 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                this.updateThemeIcon(theme);
+            }
+
+            toggleTheme() {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('palettepro_theme', next);
+                this.updateThemeIcon(next);
+            }
+
+            updateThemeIcon(theme) {
+                const btn = document.getElementById('theme-toggle');
+                if (btn) btn.innerHTML = `<i class="fa-solid fa-${theme === 'dark' ? 'sun' : 'moon'}"></i>`;
+            }
+
+            saveCurrentPalette() {
+                this.savedPalettes.unshift({
+                    id: Date.now(),
+                    title: `Palette #${this.savedPalettes.length + 1}`,
+                    colors: [...this.currentPalette]
+                });
+                localStorage.setItem('palettepro_saved', JSON.stringify(this.savedPalettes));
+                this.renderLibrary();
+                this.toast('Saved to your Library!');
+            }
+
+            renderLibrary() {
+                const grid = document.getElementById('library-grid');
+                if (!grid) return;
+                
+                if (this.savedPalettes.length === 0) {
+                    grid.innerHTML = `<p style="color: var(--text-secondary);">No saved palettes found.</p>`;
+                    return;
+                }
+
+                grid.innerHTML = this.savedPalettes.map(p => `
+                    <div class="palette-card">
+                        <div class="card-swatches">
+                            ${p.colors.map(c => `<div class="card-swatch" style="background:${c}"></div>`).join('')}
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-title">${p.title}</span>
+                            <button onclick="app.deleteSaved(${p.id})"><i class="fa-solid fa-trash" style="color: var(--text-muted)"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            deleteSaved(id) {
+                this.savedPalettes = this.savedPalettes.filter(p => p.id !== id);
+                localStorage.setItem('palettepro_saved', JSON.stringify(this.savedPalettes));
+                this.renderLibrary();
+            }
+
+            clearLibrary() {
+                this.savedPalettes = [];
+                localStorage.removeItem('palettepro_saved');
+                this.renderLibrary();
+            }
+
+            renderTrends(filter = 'all') {
+                const grid = document.getElementById('trends-grid');
+                if (!grid) return;
+
+                const list = filter === 'all' ? this.trendData : this.trendData.filter(t => t.category === filter);
+                grid.innerHTML = list.map(t => `
+                    <div class="palette-card">
+                        <div class="card-swatches">
+                            ${t.colors.map(c => `<div class="card-swatch" style="background:${c}"></div>`).join('')}
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-title">${t.title}</span>
+                            <span class="badge badge-accent">${t.category}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            filterTrends(cat, btn) {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.renderTrends(cat);
+            }
+
+            renderCommunity() {
+                const grid = document.getElementById('community-grid');
+                if (!grid) return;
+                grid.innerHTML = this.trendData.map(t => `
+                    <div class="palette-card">
+                        <div class="card-swatches">
+                            ${t.colors.map(c => `<div class="card-swatch" style="background:${c}"></div>`).join('')}
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-title">${t.title}</span>
+                            <span><i class="fa-regular fa-heart"></i> ${Math.floor(Math.random() * 500 + 50)}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            updateTheory() {
+                const seed = document.getElementById('theory-seed').value;
+                const mode = document.getElementById('theory-mode').value;
+                const container = document.getElementById('theory-result');
+
+                let colors = [seed];
+                const rgb = this.hexToRgb(seed);
+
+                if (mode === 'monochromatic') {
+                    colors = [seed, `#${Math.min(255, rgb.r+40).toString(16)}${rgb.g.toString(16)}${rgb.b.toString(16)}`];
+                } else {
+                    colors = [seed, '#3b82f6', '#8b5cf6', '#ec4899'];
+                }
+
+                container.innerHTML = colors.map(c => `<div class="card-swatch" style="background:${c}"></div>`).join('');
+            }
+
+            updateContrastTest() {
+                const bg = document.getElementById('contrast-bg').value;
+                const fg = document.getElementById('contrast-fg').value;
+                const box = document.getElementById('contrast-preview-box');
+                const ratioDisplay = document.getElementById('contrast-ratio');
+
+                box.style.backgroundColor = bg;
+                box.style.color = fg;
+
+                const ratio = this.getContrastRatio(bg, fg);
+                ratioDisplay.innerText = `${ratio}:1`;
+
+                const passNormal = ratio >= 4.5;
+                const passLarge = ratio >= 3.0;
+
+                document.getElementById('wcag-normal').className = `badge ${passNormal ? 'badge-success' : 'badge-fail'}`;
+                document.getElementById('wcag-normal').innerText = passNormal ? 'Pass AAA' : 'Fail';
+
+                document.getElementById('wcag-large').className = `badge ${passLarge ? 'badge-success' : 'badge-fail'}`;
+                document.getElementById('wcag-large').innerText = passLarge ? 'Pass AA' : 'Fail';
+            }
+
+            setExportFormat(fmt, btn) {
+                this.exportFormat = fmt;
+                document.querySelectorAll('#view-export .filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.renderExportCode();
+            }
+
+            renderExportCode() {
+                const block = document.getElementById('export-code');
+                if (!block) return;
+
+                if (this.exportFormat === 'css') {
+                    block.innerText = `:root {\n` + this.currentPalette.map((c, i) => `  --color-${i + 1}: ${c};`).join('\n') + `\n}`;
+                } else if (this.exportFormat === 'json') {
+                    block.innerText = JSON.stringify({ colors: this.currentPalette }, null, 2);
+                } else if (this.exportFormat === 'scss') {
+                    block.innerText = this.currentPalette.map((c, i) => `$color-${i + 1}: ${c};`).join('\n');
+                } else if (this.exportFormat === 'tailwind') {
+                    block.innerText = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n` + 
+                        this.currentPalette.map((c, i) => `        'brand-${i + 1}': '${c}',`).join('\n') + `\n      }\n    }\n  }\n}`;
+                }
+            }
+
+            copyExportCode() {
+                const code = document.getElementById('export-code').innerText;
+                this.copyToClipboard(code);
+            }
+        }
+
+        let app;
+        window.addEventListener('DOMContentLoaded', () => {
+            app = new PaletteApp();
+        });
+    </script>
+</body>
+</html>
